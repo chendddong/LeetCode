@@ -31,6 +31,7 @@
 
 public class Solution {
     /* Important problem */
+    /* Use a parent node to keep track of the previous node */
     public int longestConsecutive(TreeNode root) {
         return longestConsecutiveHelper(root, null, 0);
     }
@@ -61,6 +62,7 @@ public class Solution {
 ///////////////////
 
 public class Solution {
+    /* Global max; Add 1 by default just handle the non-consecutive one */
     private int maxL = 0;
     public int longestConsecutive(TreeNode root) {
         postOrderDFS(root);
