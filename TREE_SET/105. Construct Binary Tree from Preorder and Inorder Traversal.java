@@ -1,7 +1,7 @@
 /**
  * Given preorder and inorder traversal of a tree, construct the binary tree.
  *
- * -- LeetCode 105
+ * -- LeetCode 105, 106
  * -- TreeDemo 13.1
  */
 
