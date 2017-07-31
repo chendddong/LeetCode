@@ -93,3 +93,79 @@ public class Trie {
     }
 }
 
+/////////////////////
+// HashMap Version //
+/////////////////////
+
+class TrieNode {
+    char c;
+    HashMap<Character, TrieNode> children = new HashMap<>();
+    public boolean hasWord;
+    public TrieNode() {}
+    public TrieNode(char ch) {
+        c = ch;
+    }
+}
+
+public class Trie {
+    private TrieNode root;
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    /* Insert */ 
+    public void insert(String word) {
+        TrieNode cur = root;
+        HashMap<Character, TrieNode> curChildren = root.children;
+        char[] wordArray = word.toCharArray();
+        for (int i = 0; i < wordArray.length; i++) {
+            char wc = wordArray[i];
+            if (curChildren.containsKey(wc)) {
+                cur = curChildren.get(wc);
+            } else {
+                TrieNode newNode = new TrieNode(wc);
+                curChildren.put(wc, newNode);
+                cur = newNode;
+            }
+            curChildren = cur.children;
+            if (i == wordArray.length - 1) {
+                cur.hasWord = true;
+            }
+        }    
+    }
+    /* Search */
+    public boolean search(String word) {
+        if (searchNodePosition(word) == null) {
+            return false;
+        }
+        if (searchNodePosition(word).hasWord) {
+            return true;
+        }
+        return false;
+    }
+    /* StartWith */
+    public boolean startsWith(String word) {
+        if (searchNodePosition(word) == null) {
+            return false;
+        }
+        return true;
+    }
+    /* SearchNodePosition */
+    public TrieNode searchNodePosition(String word) {
+        HashMap<Character, TrieNode> children = root.children;
+        TrieNode cur = null;
+        char[] wordArray = word.toCharArray();
+        for (int i = 0; i < wordArray.length; i++) {
+            char c = wordArray[i];
+            if (children.containsKey(c)) {
+                cur = children.get(c);
+                children = cur.children;
+            } else {
+                return null;
+            }
+        }
+
+        return cur;
+    }
+}
+
