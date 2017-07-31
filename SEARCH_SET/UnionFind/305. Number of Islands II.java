@@ -42,6 +42,10 @@
 
  */
 
+////////////////////////////
+// UnionFind with HashMap //
+////////////////////////////
+
 public class Solution {
     /*  
         Other Approaches:
@@ -164,6 +168,70 @@ public class Solution {
 
                     }
                 }
+            }
+            result.add(count);
+        }
+        return result;
+    }
+}
+
+//////////////////////////
+// UnionFind with Array //
+//////////////////////////
+
+public class Solution {    
+    int[] father = null;
+    class UnionFind {
+        UnionFind(int N) {
+            father = new int[N + 1];
+            Arrays.fill(father, -1);
+        }
+        int compressedFind(int x) {
+            if (father[x] == x) {
+                return x;
+            }
+            return father[x] = compressedFind(father[x]);
+        }
+        void union(int x, int y) {
+            int fatherX = compressedFind(x); 
+            int fatherY = compressedFind(y);
+            if (fatherX != fatherY) {
+                father[fatherX] = fatherY;
+            }
+        }
+    }
+
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        int[][] dirs = {{0,1},{1,0},{-1,0},{0,-1}};
+        List<Integer> result = new ArrayList<>();
+        if (m <= 0 || n <= 0) {
+            return result;
+        }
+
+        UnionFind uf = new UnionFind(m * n);
+        int count = 0;
+
+        for (int[] p : positions) {
+            int id = n * p[0] + p[1];
+            father[id] = id;
+            count++;    
+
+            for (int[] dir : dirs) {
+                int x = p[0] + dir[0];
+                int y = p[1] + dir[1];
+                int adjID = n * x + y;
+
+                if (x < 0 || x >= m || y < 0 || y >= n || father[adjID] == -1) 
+                {
+                    continue;
+                }
+
+                int fID = uf.compressedFind(id);
+                int fAdj = uf.compressedFind(adjID);
+                if (fID != fAdj) {
+                    count--;
+                    uf.union(fID, adjID);
+                } 
             }
             result.add(count);
         }
