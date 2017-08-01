@@ -186,65 +186,73 @@ public class WordDictionary {
 }
 
 
-//version 3: use HashMap and bfs
-class TrieNode{
-    public Map<Character,TrieNode> children;
+///////////////////
+// HashMap + BFS //
+///////////////////
+
+class TrieNode {
+    public HashMap<Character, TrieNode> children;
     public boolean hasWord;
-    public TrieNode(){
-        children=new HashMap<>();
-        hasWord=false;
+    public TrieNode() {
+        children = new HashMap<>();
+        hasWord = false;
     }
 }
 
 public class WordDictionary {
     TrieNode root;
-    public WordDictionary(){
-        root=new TrieNode();
+    public WordDictionary() {
+        root = new TrieNode();
     }
 
-    // Adds a word into the data structure.
     public void addWord(String word) {
-        // Write your code here
-        TrieNode cur=root;
-        for(int i=0;i<word.length();++i){
-            char c=word.charAt(i);
-            TrieNode nextNode=cur.children.get(c);
-            if(nextNode==null){
-                nextNode=new TrieNode();
-                cur.children.put(c,nextNode);
+        TrieNode cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+
+            if (!cur.children.containsKey(c)) { /* No previous occurrence */
+                TrieNode newNode = new TrieNode();
+                cur.children.put(c, newNode);
             }
-            cur=nextNode;
+            /* Found the child; Just use get(c) to go deep */
+            cur = cur.children.get(c);
         }
-        cur.hasWord=true;
+        cur.hasWord = true;            
     }
 
-    // Returns if the word is in the data structure. A word could
-    // contain the dot character '.' to represent any one letter.
+    /* We can directly search without using a find Helper function */
     public boolean search(String word) {
-        // Write your code here
-        Queue<TrieNode> nexts=new LinkedList<>();
-        nexts.add(root);
-        int index=0;
-        while(!nexts.isEmpty()){
-            int size=nexts.size();
-            char c=word.charAt(index);
-            boolean flag=false;
-            for(int i=0;i<size;++i){
-                TrieNode cur=nexts.poll();
-                if(c=='.'){
-                    for(TrieNode tempNode:cur.children.values()){
-                        nexts.add(tempNode);
-                        flag|=tempNode.hasWord;
+        ArrayDeque<TrieNode> q = new ArrayDeque<>();
+        q.offer(root);
+        int index = 0; /* For traversing the ‘word’ */
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            char c = word.charAt(index);
+            boolean flag = false;
+            for (int i = 0; i < size; i++) {
+                TrieNode cur = q.poll();
+                if (c == '.') {
+                    for (TrieNode tempNode : cur.children.values()) {
+                        q.offer(tempNode);
+                        // a |= b is the same as a = (a | b);
+                        flag |= tempNode.hasWord;  
                     }
-                } else if(cur.children.containsKey(c)){
-                    TrieNode nextNode=cur.children.get(c);
-                    flag|=nextNode.hasWord;
-                    nexts.add(nextNode);
+                } else if (cur.children.containsKey(c)) {
+                    TrieNode newNode = cur.children.get(c);
+                    flag |= newNode.hasWord;
+                    q.offer(newNode);
                 }
             }
             index++;
-            if(index>=word.length()) return flag;
+            if (index >= word.length()) {
+                return flag;
+            }
         }
         return false;
     }
+
 }
+
+
+
