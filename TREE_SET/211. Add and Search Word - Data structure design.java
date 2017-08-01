@@ -110,6 +110,141 @@ public class WordDictionary {
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
+///////////////////
+// HashMap + DFS //
+///////////////////
+
+/* TrieNode is much easier to construct */
+class TrieNode {
+    public HashMap<Character, TrieNode> children;
+    public boolean hasWord;
+
+    public TrieNode() {
+        children = new HashMap<Character, TrieNode>();
+        hasWord = false;
+    }
+}
+
+public class WordDictionary {
+    private TrieNode root;
+
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+
+    public void addWord(String word) {
+        TrieNode cur = root;
+        char[] wordArray = word.toCharArray();
+        for (int i = 0; i < wordArray.length; i++) {
+            char c = wordArray[i];
+            if (!cur.children.containsKey(c)) { /* No previous occurrence */
+                TrieNode newNode = new TrieNode();
+                cur.children.put(c, newNode);
+            }
+            /* Found the child; Just use get(c) to go deep */
+            cur = cur.children.get(c);
+        }
+        cur.hasWord = true;
+    }
+
+    public boolean find(String word, int index, TrieNode cur) {
+        if (index == word.length()) {
+            if (cur.children.size() == 0) {
+                return true;
+            } 
+            return false;
+            
+        }
+
+        Character c = word.charAt(index);
+        if (cur.children.containsKey(c)) {
+            if (index == word.length() - 1 && cur.children.get(c).hasWord) {
+                return true;
+            }
+            return find(word, index + 1, cur.children.get(c));
+        } else if (c == '.') {
+            boolean result = false;
+            for (Map.Entry<Character, TrieNode> child : cur.children.entrySet())
+            {
+                if (index == word.length() - 1 && child.getValue().hasWord) {
+                    return true;
+                }
+                /* If any path is true, set result to be true */
+                if (find(word, index + 1, child.getValue())) {
+                    result = true;
+                }
+            }
+            return result;
+        } else {
+            return false;
+        } 
+    }
+
+    public boolean search(String word) {
+        return find(word, 0, root);
+    }
+}
 
 
+//version 3: use HashMap and bfs
+class TrieNode{
+    public Map<Character,TrieNode> children;
+    public boolean hasWord;
+    public TrieNode(){
+        children=new HashMap<>();
+        hasWord=false;
+    }
+}
+
+public class WordDictionary {
+    TrieNode root;
+    public WordDictionary(){
+        root=new TrieNode();
+    }
+
+    // Adds a word into the data structure.
+    public void addWord(String word) {
+        // Write your code here
+        TrieNode cur=root;
+        for(int i=0;i<word.length();++i){
+            char c=word.charAt(i);
+            TrieNode nextNode=cur.children.get(c);
+            if(nextNode==null){
+                nextNode=new TrieNode();
+                cur.children.put(c,nextNode);
+            }
+            cur=nextNode;
+        }
+        cur.hasWord=true;
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    public boolean search(String word) {
+        // Write your code here
+        Queue<TrieNode> nexts=new LinkedList<>();
+        nexts.add(root);
+        int index=0;
+        while(!nexts.isEmpty()){
+            int size=nexts.size();
+            char c=word.charAt(index);
+            boolean flag=false;
+            for(int i=0;i<size;++i){
+                TrieNode cur=nexts.poll();
+                if(c=='.'){
+                    for(TrieNode tempNode:cur.children.values()){
+                        nexts.add(tempNode);
+                        flag|=tempNode.hasWord;
+                    }
+                } else if(cur.children.containsKey(c)){
+                    TrieNode nextNode=cur.children.get(c);
+                    flag|=nextNode.hasWord;
+                    nexts.add(nextNode);
+                }
+            }
+            index++;
+            if(index>=word.length()) return flag;
+        }
+        return false;
+    }
+}
