@@ -208,33 +208,42 @@ public class Solution {
             return result;
         }
 
+        /* This will prevent the duplicate operators!!!*/
+        int[][] islands = new int[m][n];   
         UnionFind uf = new UnionFind(m * n);
         int count = 0;
 
         for (int[] p : positions) {
-            int id = n * p[0] + p[1];
-            father[id] = id;
-            count++;    
+            if (islands[p[0]][p[1]] != 1) {
+                int id = n * p[0] + p[1];
+                father[id] = id;
 
-            for (int[] dir : dirs) {
-                int x = p[0] + dir[0];
-                int y = p[1] + dir[1];
-                int adjID = n * x + y;
+                islands[p[0]][p[1]] = 1;
+                count++;    
 
-                if (x < 0 || x >= m || y < 0 || y >= n || father[adjID] == -1) 
-                {
-                    continue;
-                }
+                for (int[] dir : dirs) {
+                    int x = p[0] + dir[0];
+                    int y = p[1] + dir[1];
+                    int adjID = n * x + y;
 
-                int fID = uf.compressedFind(id);
-                int fAdj = uf.compressedFind(adjID);
-                if (fID != fAdj) {
-                    count--;
-                    uf.union(fID, adjID);
-                } 
+                    if (x < 0 || x >= m || y < 0 || y >= n || islands[x][y] ==
+                       0) 
+                    {
+                        continue;
+                    }
+                    /* 
+                        Since we are going to decrement the count, we have to do
+                        this outside the generic find function 
+                     */ 
+                    if (uf.compressedFind(id) != uf.compressedFind(adjID)) {
+                        count--;
+                        uf.union(id, adjID);
+                    } 
+                }                
             }
             result.add(count);
         }
         return result;
     }
 }
+
