@@ -37,13 +37,13 @@
 
 class TrieNode {
     public boolean hasWord;
-    public TrieNode[] children;
-
+    public TrieNode[] children; /* Need an array full of TrieNode */ 
+    /* Constructor */
     public TrieNode() {
         children = new TrieNode[26];
         hasWord = false;    
     }
-
+    /* Insert: 1. length, position, recursion */        
     public void insert(String word, int index) {
         if (word.length() == index) {
             this.hasWord = true;
@@ -55,7 +55,7 @@ class TrieNode {
         }
         children[pos].insert(word, index + 1);
     }
-
+    /* Find: 1. length, position, recursion */
     public TrieNode find(String word, int index) {
         if (word.length() == index) {
             return this;
@@ -117,6 +117,7 @@ public class Trie {
     public void insert(String word) {
         TrieNode cur = root;
         HashMap<Character, TrieNode> curChildren = root.children;
+        /* Better performance than String.charAt() */
         char[] wordArray = word.toCharArray();
         for (int i = 0; i < wordArray.length; i++) {
             char wc = wordArray[i];
@@ -168,4 +169,6 @@ public class Trie {
         return cur;
     }
 }
+
+
 
