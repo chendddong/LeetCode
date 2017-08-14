@@ -20,6 +20,8 @@
 // Throw elements from 1 to 2 and pop from 2 //
 ///////////////////////////////////////////////
 
+/* Can also practice some of those methods in ArrayDeque */
+
 public class MyQueue {
     private ArrayDeque<Integer> stack1;
     private ArrayDeque<Integer> stack2;
@@ -29,7 +31,7 @@ public class MyQueue {
         stack2 = new ArrayDeque<>();
     }
 
-    /* Only push the element to 1 stack. */
+    /* Only push the element to stack 1. */
     public void push(int x) {
         stack1.push(x);
     }
