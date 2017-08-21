@@ -158,6 +158,3 @@ class Solution {
         second.val = temp;
     }
 }
-
-
-
