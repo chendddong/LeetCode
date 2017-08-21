@@ -72,6 +72,16 @@ public class Solution {
 /////////////////////////////
 
 public class Solution {
+    /*
+        Good one. Must review.
+        Stick to the Overview there are three big situation
+        1.  the maxPath comes from left child
+        2.  the maxPath comes from right child
+        3.  the maxPath must go through the root
+        
+        draw it accordingly it's a must
+     */
+
     private class ResultType {
         int singlePath, maxPath; 
         ResultType(int singlePath, int maxPath) {
@@ -103,28 +113,17 @@ public class Solution {
         ResultType result = helper(root);
         return result.maxPath;
     }
+
+    /*
+        Thought:
+
+        A path from start to end, goes up on the tree for 0 or more steps, then goes down for 0 or more steps. Once it goes down, it can't go up. Each path has a highest node, which is also the lowest common ancestor of all other nodes on the path.
+
+        A recursive method maxPathDown(TreeNode node):
+            (1) computes the maximum path sum with highest node is the input node, update maximum if necessary 
+            (2) returns the maximum sum of the path that can be extended to input node's parent.    
+     */     
 }
-
-/*
-    Good one. Must review.
-    Stick to the Overview there are three big situation
-    1.  the maxPath comes from left child
-    2.  the maxPath comes from right child
-    3.  the maxPath must go through the root
-    
-    draw it accordingly it's a must
- */
-
-
-/*
-    Thought:
-
-    A path from start to end, goes up on the tree for 0 or more steps, then goes down for 0 or more steps. Once it goes down, it can't go up. Each path has a highest node, which is also the lowest common ancestor of all other nodes on the path.
-
-    A recursive method maxPathDown(TreeNode node):
-        (1) computes the maximum path sum with highest node is the input node, update maximum if necessary 
-        (2) returns the maximum sum of the path that can be extended to input node's parent.    
- */
 
 ///////////////////////
 // A Global variable //         Recursive is much cleaner
@@ -147,5 +146,4 @@ public class Solution {
         maxValue = Math.max(maxValue, left + right + node.val);
         return Math.max(left, right) + node.val;
     }
-}   
- 
+} 
