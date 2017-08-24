@@ -39,7 +39,7 @@ public class Solution {
                     dp[i] = dp[i] > dp[j] ? dp[i] : dp[j] + 1;
                 }
             }
-            if (dp[i] > max) { /* Update max */
+            if (dp[i] > max) { /* Record max instead of compare at the end */
                 max = dp[i];
             }
         }
